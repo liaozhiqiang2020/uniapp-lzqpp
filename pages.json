@@ -61,6 +61,13 @@
 			}
 		},
 		{
+			"path": "pages/mine/xiaoxi",
+			"style": {
+				"navigationBarTitleText": "消息通知",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
 			"path": "pages/phoneNumber/index",
 			"style": {
 				"navigationBarTitleText": "手机号授权",
@@ -103,16 +110,22 @@
 			}
 		},
 		{
+			"path": "pages/info/info2",
+			"style": {
+				"navigationBarTitleText": "课程表",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
 			"path": "pages/info/info",
 			"style": {
-				"navigationStyle": "custom",
-				"navigationBarTitleText": "消息",
-				"navigationBarTextStyle": "black",
-				"navigationBarBackgroundColor": "#f2f2f2",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": "课程表",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
 			}
-		}
-	],
+		}  
+    ],
 	"easycom": {
 		"autoscan": true,
 		"custom": {

@@ -7,6 +7,7 @@
         "tabbar"
     ],
     "dependencies": {
-        "uni-lb-tabbar": "^1.0.3"
+        "uni-lb-tabbar": "^1.0.3",
+        "uniapp-route-guards": "^1.0.7"
     }
 }

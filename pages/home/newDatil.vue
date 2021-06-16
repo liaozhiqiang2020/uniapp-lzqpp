@@ -1,6 +1,5 @@
 <template>
 	<view class="newDatil padding">
-		<!-- <image class='background' src="/static/ssss.jpg" mode="aspectFill"></image> -->
 		   <view class="title text-bold text-black">{{ noticeInfo.nickName }}</view>
 		   <view class="date">
 			 {{ noticeInfo.publishDate }}

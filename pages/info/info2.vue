@@ -3,7 +3,7 @@
 		<view class="homeBox">
 			<ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color" v-if="loadModal" />
 			
-			<hx-navbar :config="config" />
+			<!-- <hx-navbar :config="config" /> -->
 			
 			<ss-scroll-navbar :tabCurrentIndex="currentIndex" @navbarTap="navbarTapHandler" :navArr='navList'>
 			</ss-scroll-navbar>
@@ -77,7 +77,6 @@
 		onLoad() {
 			this.loadModal = true
 			this.getGoods(this.getWeekDate())
-			
 			uni.setNavigationBarColor({
 			    frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
 			    backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色

@@ -14,3 +14,9 @@ unpackage/dist/dev/
 
 # python
 *.pyc
+/.hbuilderx/
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/uniapp-lzqpp.iml
+/.idea/vcs.xml

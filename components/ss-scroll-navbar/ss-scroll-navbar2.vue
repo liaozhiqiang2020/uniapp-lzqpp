@@ -1,5 +1,5 @@
 <template>
-	<scroll-view class="ss-scroll-navbar" scroll-x :scroll-left="scrollLeft" scroll-with-animation="true">
+	<scroll-view class="ss-scroll-navbar2" scroll-x :scroll-left="scrollLeft" scroll-with-animation="true">
 		<view
 		v-for="(item, index) in navArr" 
 		:key="index" 
@@ -8,14 +8,14 @@
 		@click="tabChange(index)"
 		:id="'item-' + index"
 		>
-			<text class="title">{{item.dictLabel}}</text>
+			<text class="title">{{item}}</text>
 		</view>
 	</scroll-view>
 </template>
 
 <script>
 	export default {
-		name: 'ss-scroll-navbar1',
+		name: 'ssScrollNavbar2',
 		props: {
 			navArr: {
 				type: Array,
@@ -85,7 +85,7 @@
 </script>
 
 <style lang="scss">
-	.ss-scroll-navbar {
+	.ss-scroll-navbar2 {
 		width: 100%;
 		height: 90upx;
 		box-shadow: 0 2upx 8upx rgba(0,0,0,.06);

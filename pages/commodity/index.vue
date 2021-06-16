@@ -151,6 +151,7 @@
 						this.loadModal = false
 						if (res.data.code = 200) {
 							this.navList = res.data
+							console.log(this.navList);
 							this.getGoods(res.data[0].dictValue)
 						} else {
 							// this.$api.msg(res.data.msg);

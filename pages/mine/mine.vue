@@ -114,7 +114,7 @@
 						num: "",
 						color: "#999999",
 						title: "消息通知",
-						path: "",
+						path: "/pages/mine/xiaoxi",
 						icon: "cuIcon-noticefill",
 						isRight: true
 					},
