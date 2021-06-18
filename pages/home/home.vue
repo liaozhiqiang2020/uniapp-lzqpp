@@ -13,7 +13,6 @@
 			</swiper>
 		</view>
 		<sh-menu :detail="menuList" :imgW="110" :menu="menu"></sh-menu>
-		<!-- <ju-navigator-grid element-id="navigatorMenu" :list="menu" @press="onPress" height="180" size="90"/> -->
 		<view class="index solids-top">
 			<view class="box">
 				<view class="cu-bar bg-white">
@@ -47,7 +46,6 @@
 	} from '../../js_sdk/mmmm-image-tools/index.js';
 	import shMenu from '@/components/sh-menu.vue';
 	import hxNavbar from '@/components/hx-navbar/hx-navbar';
-	// import juNavigatorGrid from '@/components/ju-navigator-grid/ju-navigator-grid';
 	const baseUrl = require('@/common/vmeitime-http');
 	import {
 		mapState,
@@ -77,20 +75,14 @@
 				loadModal: false, //加载
 				menuList: [], //菜单列表
 				menu:3,
-				 // menu:[
-				 //            {title: "带app内url", url: '/pages/field/index', icon: "https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2496571732,442429806&fm=26&gp=0.jpg"},
-				 //            {title: "带外部url", url: 'https://baidu.com'},
-				           
-				 //    ]
 			};
 		},
 		components: {
 			hxNavbar,
 			shMenu,
-			// juNavigatorGrid
 		},
 		computed: {
-			...mapState(['userInfo', 'hasLogin', 'img_uploadState'])
+			...mapState(['userInfo', 'hasLogin'])
 		},
 		onLoad() {
 			this.loadModal = true
@@ -98,11 +90,6 @@
 		onShow() {
 			var imgUrl = '../../static/swiper-rf.png'
 			this.swiperBj = require('../../static/swiper-'+this.themeColor.name+'.png')
-			if(!uni.getStorageSync("phoneNumber")){
-				uni.navigateTo({
-					url:"/pages/phoneNumber/index"
-				})
-			}
 			this.queryCarouselImg()
 			this.getMenu()
 			this.getNews()
@@ -129,25 +116,6 @@
 			onPress(e){
 			        console.log(e)
 			    },
-			img_upload() {
-				//是否开启选择相册
-				uni.request({
-					method: 'GET',
-					url: baseUrl.baseUrl + '/app/configKey/img_upload', //仅为示例，并非真实接口地址。
-					success: res => {
-						if (res.data.code == 200) {
-							if (res.data.data.shenhe == 'Y') {
-								// #ifdef MP-WEIXIN
-								this.message();
-								// #endif
-							}
-							this.$mStore.commit('img_upload', res.data.data);
-						} else {
-							this.$api.msg(res.data.msg);
-						}
-					}
-				});
-			},
 			/* 轮播图 */
 			queryCarouselImg() {
 				this.$http
@@ -169,6 +137,9 @@
 			/* 菜单 */
 			getMenu() {
 				var phone = wx.getStorageSync("phoneNumber")
+				if(phone==""){
+					phone="null";
+				}
 				this.$http
 					.testPost('/weixin/findAllBtnMenuByTel/'+phone)
 					.then(res => {

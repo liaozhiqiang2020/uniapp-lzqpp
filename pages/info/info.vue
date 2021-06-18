@@ -8,7 +8,7 @@
 			<ss-scroll-navbar :tabCurrentIndex="currentIndex" @navbarTap="navbarTapHandler" :navArr='navList'>
 			</ss-scroll-navbar>
 			
-			<uni-list :class="{ 'uni-list--waterfall': options.waterfall }">
+			<uni-list v-if="phone!=''" :class="{ 'uni-list--waterfall': options.waterfall }">
 				<!-- 通过 uni-list--waterfall 类决定页面布局方向 -->
 				<!-- to 属性携带参数跳转详情页面，当前只为参考 -->
 				<uni-list-item :border="!options.waterfall" class="uni-list-item--waterfall" title="自定义商品列表"
@@ -71,12 +71,21 @@
 				goods: [], //商品类表
 				goodNum: 1, //默认数量
 				currentIndex: 0,
+				phone:""
 				// currentIndex1: 0,
 			}
 		},
-		onLoad() {
-			this.loadModal = true
-			this.getGoods(this.getWeekDate())
+		onLoad() {			
+			if (!uni.getStorageSync("phoneNumber")) {
+				uni.navigateTo({
+					url: "/pages/phoneNumber/index"
+				})
+			}else{
+				this.loadModal = true
+				this.getGoods(this.getWeekDate())
+				this.phone = uni.getStorageSync("phoneNumber")
+			}
+			
 			
 			uni.setNavigationBarColor({
 			    frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
@@ -88,8 +97,7 @@
 			})
 		},
 		onShow() { //tab页加载
-
-
+			
 		},
 		methods: {
 			getWeekDate() {
@@ -106,23 +114,30 @@
 			},
 			/* 课程列表 */
 			getGoods(val) {
-				var phone = wx.getStorageSync("phoneNumber")
-				this.$http
-					.testPost('/weixin/findChooseClassRecordByPhone/'+phone+'/'+val)
-					.then(res => {
-						this.loadModal = false
-						if (res.data.code = 200) {
-							console.log(res.data)
-							this.goods = res.data
-							
-						} else {
-							// this.$api.msg(res.data.msg);
-						}
+				if (!uni.getStorageSync("phoneNumber")) {
+					uni.navigateTo({
+						url: "/pages/phoneNumber/index"
 					})
-					.catch(err => {
-						uni.stopPullDownRefresh();
-						this.loadModal = false;
-					});
+				}else{
+					var phone = wx.getStorageSync("phoneNumber")
+					this.$http
+						.testPost('/weixin/findChooseClassRecordByPhone/'+phone+'/'+val)
+						.then(res => {
+							this.loadModal = false
+							if (res.data.code = 200) {
+								this.goods = res.data
+								
+							} else {
+								// this.$api.msg(res.data.msg);
+							}
+						})
+						.catch(err => {
+							uni.stopPullDownRefresh();
+							this.loadModal = false;
+						});
+				}
+					
+				
 			},
 		}
 	}

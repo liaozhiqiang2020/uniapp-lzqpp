@@ -78,28 +78,28 @@
 			},
 			// 路由跳转
 			routerTo(path, item) {
-				// if (path == '/pages/user/SignIn/SignIn') {
-				// 	uni.navigateTo({
-				// 		url: path
-				// 	});
-				// } else {
-				// 	uni.showToast({
-				// 		title: '进入' + item.path_name,
-				// 		icon: 'none',
-				// 		duration: 1200
-				// 	});
-				// }
-					// console.log(item)
+				console.log(item.targetUrl);
 				if(item.targetUrl == ''){
 					 wx.showModal({
 					title: '提示',
 					content: item.name+'功能暂未开放！',
 					showCancel: false
 				  })
-				}else{
+				}else if(item.targetUrl == '/pages/sign-up/index'){
 					uni.navigateTo({
 						url: path
 					});	
+				}else{
+					if(!uni.getStorageSync("phoneNumber")){
+						uni.navigateTo({
+							url:"/pages/phoneNumber/index"
+						})
+					}else{
+						uni.navigateTo({
+							url: path
+						});	
+					}
+					
 				}
 			}
 		}

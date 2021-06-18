@@ -87,7 +87,7 @@
 					backgroundColor: [0, ['#a9a1ff', '#6970ff', '#ff55ff', '#ff9999']]
 				},
 				list: [{
-						num: "",
+						num: "0",
 						color: "orange",
 						title: "剩余金额",
 						path: "",
@@ -140,11 +140,6 @@
 		},
 		onShow() {
 			this.swiperBj = require('../../static/swiper-'+this.themeColor.name+'.png')
-			if (!wx.getStorageSync("phoneNumber")) {
-				wx.navigateTo({
-					url: "pages/phoneNumber/index"
-				})
-			}
 			this.queryBalanceByPhone()
 			uni.setTabBarStyle({
 				selectedColor: this.themeColor.color,
@@ -172,10 +167,42 @@
 			navTo(item) {
 				if (item.title == '推广返课') {
 					this.share()
-				} else {
-					uni.navigateTo({
-						url: item.path
-					});
+				}else if(item.path == '/pages/mine/deposit'){
+					var phone = uni.getStorageSync("phoneNumber")
+					this.$http
+						.testPost('/weixin/findStudentByTel/' + phone)
+						.then(res => {
+							uni.stopPullDownRefresh();
+							this.loadModal = false
+							if(res.data==0){//没有学员
+								uni.showModal({
+									title: '提示',
+									content: '请先联系教练进行报名！',
+									showCancel: false
+								})
+							}else{
+								uni.navigateTo({
+									url: item.path
+								});
+							}	
+						})
+						.catch(err => {
+							uni.stopPullDownRefresh();
+							this.loadModal = false;
+						});
+						
+				}
+				 else {
+					if(!uni.getStorageSync("phoneNumber")){
+						uni.navigateTo({
+							url:"/pages/phoneNumber/index"
+						})
+					}else{
+						uni.navigateTo({
+							url: item.path
+						});
+					}
+					
 				}
 			},
 			/* 查询余额 */

@@ -105,7 +105,7 @@
 							this.loading = false
 							if (res.data==1) {
 								uni.showToast({
-									title: '提交成功',
+									title: '报名成功',
 									icon: 'success',
 									duration: 2000,
 									success: function() { //接口调用结束的回调函数 

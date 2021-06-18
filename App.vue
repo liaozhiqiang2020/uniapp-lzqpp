@@ -35,26 +35,25 @@
 						method: 'GET',
 						success: function(res) {
 							if (res.data != null && res.data != undefined && res.data != '') {
-								wx.setStorageSync("openid", res.data
-								.openid); //将获取的openid存到缓存中(用户唯一id信息)
-								wx.request({
-									url: that.baseUrl +'/weixin/findWxUserInfoByOpenId/' +
-										res.data.openid,
-									method: 'POST',
-									success: function(rest) {
-										if (rest.data != null && rest.data !=
-											undefined && rest.data != '') {
-											wx.setStorageSync("userInfo", rest
-												.data);
-										}
-									}
-								})
+								wx.setStorageSync("openid", res.data.openid); //将获取的openid存到缓存中(用户唯一id信息)
+								// wx.request({
+								// 	url: that.baseUrl +'/weixin/findWxUserInfoByOpenId/' +
+								// 		res.data.openid,
+								// 	method: 'POST',
+								// 	success: function(rest) {
+								// 		if (rest.data != null && rest.data !=
+								// 			undefined && rest.data != '') {
+								// 				console.log("rest.data---------"+rest.data);
+								// 			wx.setStorageSync("userInfo", rest.data);
+								// 		}
+								// 	}
+								// })
 
 								wx.setStorageSync("sessionKey", res.data.sessionKey);
 								if (res.data.phoneNumber != null && res.data.phoneNumber !=
 									undefined && res.data.phoneNumber != '') {
-									wx.setStorageSync("phoneNumber", res.data
-									.phoneNumber); //手机号
+										console.log("res.data.phoneNumber--------"+res.data.phoneNumber);
+									wx.setStorageSync("phoneNumber", res.data.phoneNumber); //手机号
 								}
 							}
 						}
