@@ -35,6 +35,7 @@ import cuCustom from './colorui/components/cu-custom.vue'
 Vue.component('cu-custom', cuCustom)
 import $mSettingConfig from '@/config/setting.config.js';
 Vue.config.productionTip = false
+
 App.mpType = 'app'
 
 //加载

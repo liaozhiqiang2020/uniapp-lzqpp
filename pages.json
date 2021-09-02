@@ -109,6 +109,34 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+    {
+    	"path": "pages/choujiang/datil",
+    	"style": {
+    		"navigationBarTitleText": "选择学员",
+    		"navigationBarTextStyle": "white"
+    	}
+    },
+    {
+    	"path": "pages/choujiang/index",
+    	"style": {
+    		"navigationBarTitleText": "幸运抽奖",
+    		"navigationBarTextStyle": "white"
+    	}
+    },
+    {
+    	"path": "pages/paike/datil",
+    	"style": {
+    		"navigationBarTitleText": "选择学员",
+    		"navigationBarTextStyle": "white"
+    	}
+    },
+    {
+    	"path": "pages/paike/index",
+    	"style": {
+    		"navigationBarTitleText": "教练排课",
+    		"navigationBarTextStyle": "white"
+    	}
+    },
 		{
 			"path": "pages/info/info2",
 			"style": {

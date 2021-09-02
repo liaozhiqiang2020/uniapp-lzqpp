@@ -5,7 +5,7 @@
 			 {{ noticeInfo.publishDate }}
 		   </view>
 		   <view class="content text-black">
-			  {{ noticeInfo.reward }}
+			  <text>{{ noticeInfo.reward }}</text>
 		   </view>
 		   <image :src="baseUrl+noticeInfo.imgUrl" mode="widthFix"></image>
 		   

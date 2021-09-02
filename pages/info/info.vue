@@ -126,7 +126,7 @@
 							this.loadModal = false
 							if (res.data.code = 200) {
 								this.goods = res.data
-								
+								console.log(this.goods);
 							} else {
 								// this.$api.msg(res.data.msg);
 							}

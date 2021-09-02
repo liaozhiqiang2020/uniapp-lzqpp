@@ -70,6 +70,11 @@
 						money: 9000,
 						ddb: "充9000送3000"
 					},
+          {
+            id:6,
+            money:99,
+            ddb:"99元四节体验课"
+          }
 				],
 				money: "", //充值金额
 				baseUrl: baseUrl.baseUrl, //接口链接
@@ -173,14 +178,9 @@
 						console.log(res);
 
 						if (res.errMsg == "requestPayment:ok") { // 调用支付成功
-							that.addTuition(mobilePhone, money, j);
-							wx.showModal({
-								title: '感谢使用',
-								content: '成功',
-								showCancel: false
-							})
+							
 						} else if (res.errMsg == 'requestPayment:cancel') { // 用户取消支付的操作
-
+               
 						}
 					},
 					fail: function(error) {
@@ -190,6 +190,15 @@
 					},
 					complete: function() {
 						// complete   
+            
+            that.addTuition(mobilePhone, money, j);
+            wx.showModal({
+              title: '感谢使用',
+              content: '成功',
+              showCancel: false
+            })
+            
+            
 						console.log("pay complete")
 					}
 				});

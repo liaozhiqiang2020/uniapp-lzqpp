@@ -7,11 +7,11 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">姓名</view>
-				<input placeholder="请输入姓名" v-model="formData.name"></input>
+				<input  placeholder="请输入姓名" v-model="formData.name"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">年龄</view>
-				<input placeholder="请输入年龄" v-model="formData.age"></input>
+				<input placeholder="请输入年龄" v-model="formData.age" @onkeyup = "value=value.replace(/[^\d]/g,'')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">学校</view>
@@ -25,6 +25,10 @@
 					</view>
 				</picker>
 			</view>
+      <view class="cu-form-group" style="border-bottom: 1rpx solid #eee;">
+      	<view class="title">招生老师手机号</view>
+      	<input placeholder="没有可不填写" v-model="formData.xstel"></input>
+      </view>
 			<!-- <view class="cu-form-group">
 			</view> -->
 			<view class="padding-xl">
@@ -91,13 +95,17 @@
 					this.$api.msg('手机号不合法')
 				} else if (this.formData.name == '') {
 					this.$api.msg('请输入姓名')
-				} else if (!numReg.test(this.formData.age)) {
-					this.$api.msg('年龄格式不正确')
-				} else if (this.formData.school == '') {
-					this.$api.msg('请输入学校')
-				} else if (this.formData.sex == '') {
+				} 
+        else if (!numReg.test(this.formData.age)) {
+					this.$api.msg('年龄只能输入数字')
+				} 
+    //     else if (this.formData.school == '') {
+				// 	this.$api.msg('请输入学校')
+				// } 
+        else if (this.formData.sex == '') {
 					this.$api.msg('请选择性别')
-				} else {
+				} 
+        else {
 					this.loading = true
 					this.$http
 						.testPost('/weixin/addSignUp', this.formData)

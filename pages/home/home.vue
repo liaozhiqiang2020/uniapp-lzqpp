@@ -26,7 +26,7 @@
 					<image :src="baseUrl+item.imgUrl" mode="aspectFill"></image>
 					<view class="content">
 						<view class="title text-bold text-black">{{ item.nickName }}</view>
-						<view class="desc">{{ item.reward }}</view>
+						<view class="desc"><text>{{ item.reward }}</text></view>
 						<view class="date">{{ item.publishDate }}</view>
 					</view>
 				</view>
@@ -75,6 +75,10 @@
 				loadModal: false, //加载
 				menuList: [], //菜单列表
 				menu:3,
+				share:{
+					title: '',
+					imageUrl:'',
+				}
 			};
 		},
 		components: {
@@ -86,6 +90,7 @@
 		},
 		onLoad() {
 			this.loadModal = true
+			this.loadShareImg();
 		},
 		onShow() {
 			var imgUrl = '../../static/swiper-rf.png'
@@ -158,13 +163,24 @@
 			},
 			/* 新闻资讯 */
 			getNews() {
+        console.log(222);
 				this.$http
 					.testPost('/weixin/findGongGaoNotice/1')
 					.then(res => {
 						this.loadModal = false
 						uni.stopPullDownRefresh();
+            var news = [];
 						if (res.data.code = 200) {
+              console.log(res.data);
+              
+              // for(var i = 0;i<res.data.length;i++){
+              //   //替换所有的换行符
+              //   res.data[i].reward = res.data[i].reward.replace(/[\n\r]/g,"\n")
+              // }
+              
+              console.log(res.data);
 							this.newslist = res.data
+              
 						} else {
 							// this.$api.msg(res.data.msg);
 						}
@@ -181,7 +197,32 @@
 					url:"/pages/home/newDatil?noticeInfo="+noticeInfo
 				  })
 			},
+			loadShareImg(){
+			   this.$http
+			   	.testPost('/weixin/findGongGaoNotice/3')
+			   	.then(res => {
+			   			this.loadModal = false
+			   			this.share.imageUrl = 'https://lzqpp.natapp4.cc'+res.data[0].imgUrl
+						this.share.title = '零之启乒乓'
+			   		})
+			   		.catch(err => {
+			   			this.loadModal = false;
+			   		});
+			}
 
+		},
+		onShareAppMessage(res) {
+		 return {
+		 			title: this.share.title,
+		 			imageUrl:this.share.imageUrl
+		 }
+		  
+		},
+		onShareTimeline(res) {
+			 return {
+			 			title: this.share.title,
+			 			imageUrl:this.share.imageUrl
+			 }
 		}
 	};
 </script>
