@@ -45,44 +45,46 @@
 				themeList: this.$mConstDataConfig.themeList,
 				loadModal: false, //加载中
 				account: 0.00, //账户余额
-				moneylist: [{
-						id: 1,
-						money: 1000,
-						ddb: "充100送100"
-					},
-					{
-						id: 2,
-						money: 3000,
-						ddb: "充3000送500"
-					},
-					{
-						id: 3,
-						money: 5000,
-						ddb: "充5000送1000"
-					},
-					{
-						id: 4,
-						money: 7000,
-						ddb: "充7000送2000"
-					},
-					{
-						id: 5,
-						money: 9000,
-						ddb: "充9000送3000"
-					},
-          {
-            id:6,
-            money:99,
-            ddb:"99元四节体验课"
-          }
-				],
+				moneylist: [],
+    //     [{
+				// 		id: 1,
+				// 		money: 1000,
+				// 		ddb: "充1000送100"
+				// 	},
+				// 	{
+				// 		id: 2,
+				// 		money: 3000,
+				// 		ddb: "充3000送500"
+				// 	},
+				// 	{
+				// 		id: 3,
+				// 		money: 5000,
+				// 		ddb: "充5000送1399"
+				// 	},
+				// 	{
+				// 		id: 4,
+				// 		money: 7000,
+				// 		ddb: "充7000送2000"
+				// 	},
+				// 	{
+				// 		id: 5,
+				// 		money: 10000,
+				// 		ddb: "充10000送3899"
+				// 	},
+    //       // {
+    //       //   id:6,
+    //       //   money:99,
+    //       //   ddb:"99元四节体验课"
+    //       // }
+				// ],
 				money: "", //充值金额
 				baseUrl: baseUrl.baseUrl, //接口链接
 			};
 		},
 		onLoad() {
 			this.loadModal = true
-			this.queryBalanceByPhone()
+      this.queryMoneyList();
+			this.queryBalanceByPhone();
 			uni.setNavigationBarColor({
 			    frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
 			    backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色
@@ -93,6 +95,28 @@
 			})
 		},
 		methods: {
+      queryMoneyList(){
+        this.$http
+        	.testPost('/weixin/queryAllPrice')
+        	.then(res => {
+        		this.loadModal = false
+            console.log(res.data);
+            for (var i = 0; i < res.data.length; i++) {
+              this.moneylist.push({
+                id:res.data[i].id,
+                money:res.data[i].realPrice,
+                ddb:res.data[i].remarks,
+              });
+            }
+            console.log(this.moneylist);
+        		// this.moneylist = res.data
+        	})
+        	.catch(err => {
+        		// uni.stopPullDownRefresh();
+        		this.loadModal = false;
+        	});
+          
+      },
 			changeNum(item, index) {
 				// console.log(this.money)
 				this.money = item.money
@@ -178,7 +202,12 @@
 						console.log(res);
 
 						if (res.errMsg == "requestPayment:ok") { // 调用支付成功
-							
+							that.addTuition(mobilePhone, money, j);
+							wx.showModal({
+							  title: '感谢使用',
+							  content: '成功',
+							  showCancel: false
+							})
 						} else if (res.errMsg == 'requestPayment:cancel') { // 用户取消支付的操作
                
 						}
@@ -191,12 +220,7 @@
 					complete: function() {
 						// complete   
             
-            that.addTuition(mobilePhone, money, j);
-            wx.showModal({
-              title: '感谢使用',
-              content: '成功',
-              showCancel: false
-            })
+          
             
             
 						console.log("pay complete")

@@ -75,8 +75,8 @@
 			}
 		},
 		onLoad() {
-			this.loadModal = true
-			this.getGoods(this.getWeekDate())
+			// this.loadModal = true
+			// this.getGoods(this.getWeekDate())
 			uni.setNavigationBarColor({
 			    frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
 			    backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色
@@ -87,7 +87,15 @@
 			})
 		},
 		onShow() { //tab页加载
-
+        if (!uni.getStorageSync("phoneNumber")) {
+          uni.navigateTo({
+            url: "/pages/phoneNumber/index"
+          })
+        }else{
+          this.loadModal = true
+          this.getGoods(this.getWeekDate())
+          this.phone = uni.getStorageSync("phoneNumber")
+        }
 
 		},
 		methods: {

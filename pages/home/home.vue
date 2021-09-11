@@ -89,8 +89,18 @@
 			...mapState(['userInfo', 'hasLogin'])
 		},
 		onLoad() {
-			this.loadModal = true
-			this.loadShareImg();
+			
+      var phone = uni.getStorageSync("phoneNumber")
+      if(!phone){
+      	uni.navigateTo({
+      		url:"/pages/phoneNumber/index"
+      	})
+      }else{
+        this.share()
+        this.loadModal = true;
+        this.loadShareImg();
+      }
+			
 		},
 		onShow() {
 			var imgUrl = '../../static/swiper-rf.png'

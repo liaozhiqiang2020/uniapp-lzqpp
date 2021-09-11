@@ -120,7 +120,7 @@
 										setTimeout(function() {
 											//要延时执行的代码
 											uni.navigateBack()
-										}, 2000) //延迟时间  
+										}, 1000) //延迟时间  
 									}
 								})
 							} else {

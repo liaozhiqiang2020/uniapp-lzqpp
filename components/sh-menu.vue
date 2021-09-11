@@ -85,11 +85,13 @@
 					content: item.name+'功能暂未开放！',
 					showCancel: false
 				  })
-				}else if(item.targetUrl == '/pages/sign-up/index'){
-					uni.navigateTo({
-						url: path
-					});	
-				}else{
+				}
+    //     else if(item.targetUrl == '/pages/sign-up/index'){
+				// 	uni.navigateTo({
+				// 		url: path
+				// 	});	
+				// }
+        else{
 					if(!uni.getStorageSync("phoneNumber")){
 						uni.navigateTo({
 							url:"/pages/phoneNumber/index"

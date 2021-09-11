@@ -22,17 +22,14 @@
     <ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color"
       v-if="loadModal" />
     <noData v-if="tableList.length == 0"></noData>
-
-
+    
+  
     <!-- 回退弹窗 -->
     <tan-dia :show="showDailog" type="center" :custom="true" :mask-click="false" @change="change">
       <view class="uni-tip">
         <!-- 标题 -->
         <view class="uni-tip-title">周几：</view>
         <view class="uni-tip-content">
-          <!-- 中间内容进行自定义 -->
-          <!-- <input class="uni-tip-content-textarea" focus="true" placeholder="请输入周几" maxlength="-1"
-            v-model="content" /> -->
           <picker @change="bindPickerChange" :value="index" :range="array">
             <view class="picker" :style="{'color': (index>-1 ? '':'#999999')}">
               {{index>-1?array[index]:'请选择星期'}}
@@ -41,19 +38,22 @@
         </view>
         <view class="uni-tip-title">开始时间：</view>
         <view class="uni-tip-content">
-          <!-- 中间内容进行自定义 -->
-          <input class="uni-tip-content-textarea" focus="true" placeholder="请输入开始时间" maxlength="-1" v-model="kaishi" />
+          <view @click="DatePicker('time')">{{kaishi}}</view>
         </view>
         <view class="uni-tip-title">结束时间：</view>
         <view class="uni-tip-content">
-          <!-- 中间内容进行自定义 -->
-          <input class="uni-tip-content-textarea" focus="true" placeholder="请输入结束时间" maxlength="-1" v-model="jieshu" />
+          <view @click="DatePicker2('time')">{{jieshu}}</view>
+        </view>
+        <view class="uni-tip-title">教练：</view>
+        <view class="uni-tip-content">
+          <picker @change="bindPickerChange3" :range-key="'name'" :value="index3" :range="picker3">
+            <view class="picker" :style="{'color': (index>-1 ? '':'#999999')}">
+              {{index3>-1?picker3[index3].name:'请选择教练'}}
+            </view>
+          </picker>
         </view>
         <view class="uni-tip-title">课程：</view>
         <view class="uni-tip-content">
-          <!-- 中间内容进行自定义 -->
-          <!-- <input class="uni-tip-content-textarea" focus="true" placeholder="请输入周几" maxlength="-1"
-            v-model="content" /> -->
           <picker @change="PickerChange" :range-key="'name'" :value="index2" :range="picker">
             <view class="picker" :style="{'color': (index2>-1 ? '':'#999999')}">
               {{index2>-1?picker[index2].name:'请选择课程'}}
@@ -66,12 +66,20 @@
           <button type="warn" @click="cancel">取消</button>
         </view>
       </view>
+      
+      <mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :show-seconds="false" @confirm="ed" @cancel="ed" />
+      <mx-date-picker :show="showPicker2" :type="type" :value="value2" :show-tips="true" :show-seconds="false" @confirm="ed2" @cancel="ed2" />
+      
     </tan-dia>
+    
+     
   </view>
+ 
 </template>
 
 <script>
   import TanDia from '@/components/uni-dialog.vue'; // 自定义弹窗组件
+  import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
   import {
     mapState,
     mapMutations
@@ -79,7 +87,8 @@
 
   export default {
     components: {
-      TanDia
+      TanDia,
+      MxDatePicker
     },
     data() {
       return {
@@ -87,19 +96,29 @@
         index: -1,
         jg: "",
         index2: -1,
+        index3: -1,
         picker: [],
+        picker3: [],
         jg2: "",
         xingqi:"",
-        kaishi:"",
-        jieshu:"",
+        kaishi:"00:00",
+        jieshu:"23:59",
         kecheng:"",
         kechengId:0,
+        jiaolian:"",
+        jiaolianId:0,
         chooseId:"",
         tableList: [], //数据列表
         loadModal: false, //加载列表
         themeList: this.$mConstDataConfig.themeList,
         showDailog: false, // 是否显示弹窗
-        content: '' // 回退原因
+        content: '' ,// 回退原因
+        dateRange:'',
+        showPicker: false,
+        showPicker2: false,
+        type: 'rangetime',
+        value: '',
+        value2: ''
       }
     },
     onLoad(val) {
@@ -113,6 +132,7 @@
 
       this.getList();
       this.addr();
+      this.queryCoach();
       uni.setNavigationBarColor({
         frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
         backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色
@@ -123,10 +143,40 @@
       })
     },
     methods: {
+      DatePicker(type){//显示
+        this.type = type;
+        this.showPicker = true;
+        this.value = this[type];
+      },
+      DatePicker2(type){//显示
+        this.type = type;
+        this.showPicker2 = true;
+        this.value2 = this[type];
+      },
+      ed(e) {//选择
+          console.log(e);
+          this.showPicker = false;
+          if(e) {
+              this.kaishi = e.value; 
+              //选择的值
+              console.log('value => '+ e.value);
+          }
+      },
+      ed2(e) {//选择
+       console.log(e);
+          this.showPicker2 = false;
+          if(e) {
+              this.jieshu = e.value; 
+              //选择的值
+              console.log('value => '+ e.value);
+              //原始的Date对象
+              console.log('date => ' + e.date);
+          }
+      },
       chongzhi(){
         this.xingqi = "";
-        this.kaishi = "";
-        this.jieshu = "";
+        this.kaishi = "00:00";
+        this.jieshu = "23:59";
         this.kecheng = "";
         this.index = -1;
         this.index2 = -1;
@@ -142,6 +192,22 @@
           .then(res => {
             this.loadModal = false
             this.picker = res.data;
+          })
+          .catch(err => {
+            this.loadModal = false;
+          });
+      },
+      /* 查询教练 */
+      queryCoach() {
+        // console.log(this.chargeType);
+        var phone = wx.getStorageSync("phoneNumber")
+        this.$http
+          .testPost('/weixin/queryCoach', {
+            // type: this.chargeType
+          })
+          .then(res => {
+            this.loadModal = false
+            this.picker3 = res.data;
           })
           .catch(err => {
             this.loadModal = false;
@@ -185,11 +251,18 @@
         that.jieshu=kechengObj.endTime;
         that.kecheng=kechengObj.courseName;
         that.kechengId = kechengObj.courseId;//课程id
+        that.jiaolian=kechengObj.coachName;
+        that.jiaolianId = kechengObj.coachId;//教练id
         console.log(kechengObj);
         that.chooseId = kechengObj.id;
         that.picker.forEach((item2, index3, array) => {
             if(item2.name==kechengObj.courseName){
               that.index2 = index3;
+            }
+        })
+        that.picker3.forEach((item2, index3, array) => {
+            if(item2.name==kechengObj.coachName){
+              that.index3 = index3;
             }
         })
         that.showDailog = true;
@@ -210,6 +283,16 @@
         console.log(formData);
         this.kechengId = formData.id;
       },
+      //教练选择
+      bindPickerChange3(e) {
+        this.index3 = e.detail.value;
+        let formData = this.picker3[this.index3];
+        
+        this.jiaolian = formData.name;
+        console.log(formData);
+        this.jiaolianId = formData.id;
+      },
+      
       /** 回退方法 */
       returnClick() {
         this.showDailog = true
@@ -242,7 +325,9 @@
               courseId:that.kechengId,
               courseName:that.kecheng,
               studentId:that.studentId,
-              placeId:that.placeId
+              placeId:that.placeId,
+              coachId:that.jiaolianId,
+              coachName:that.jiaolian
             })
             .then(res => {
               this.loadModal = false
@@ -262,6 +347,8 @@
               week:that.jg,
               courseId:that.kechengId,
               courseName:that.kecheng,
+              coachId:that.jiaolianId,
+              coachName:that.jiaolian,
               studentId:that.studentId,
               placeId:that.placeId
             })

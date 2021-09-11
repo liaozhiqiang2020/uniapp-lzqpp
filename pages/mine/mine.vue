@@ -74,6 +74,7 @@
 				menuBorder: true,
 				menuArrow: true,
 				menuCard: true,
+        Luck: true, //防置重复点击
 				loadModal: false, //加载中
 				swiperBj: require('../../static/swiper-rf.png'),
 				config: {
@@ -165,31 +166,45 @@
 		methods: {
 			/* 跳转页面 */
 			navTo(item) {
+        
+        
 				if (item.title == '推广返课') {
 					this.share()
 				}else if(item.path == '/pages/mine/deposit'){
+          if (this.Luck == false) { //防止过度点击
+            return;
+          }
+          this.Luck = false;
 					var phone = uni.getStorageSync("phoneNumber")
-					this.$http
-						.testPost('/weixin/findStudentByTel/' + phone)
-						.then(res => {
-							uni.stopPullDownRefresh();
-							this.loadModal = false
-							if(res.data==0){//没有学员
-								uni.showModal({
-									title: '提示',
-									content: '请先联系教练进行报名！',
-									showCancel: false
-								})
-							}else{
-								uni.navigateTo({
-									url: item.path
-								});
-							}	
-						})
-						.catch(err => {
-							uni.stopPullDownRefresh();
-							this.loadModal = false;
-						});
+          if(!phone){
+          	uni.navigateTo({
+          		url:"/pages/phoneNumber/index"
+          	})
+          }else{
+            this.$http
+            	.testPost('/weixin/findStudentByPhone/17611400761')
+            	.then(res => {
+            		uni.stopPullDownRefresh();
+            		this.loadModal = false
+            		if(res.data){//没有学员
+            			uni.showModal({
+            				title: '提示',
+            				content: '请先联系老师报名！',
+            				showCancel: false
+            			})
+            		}else{
+            			uni.navigateTo({
+            				url: item.path
+            			});
+                  this.Luck = true;
+            		}	
+            	})
+            	.catch(err => {
+            		uni.stopPullDownRefresh();
+            		this.loadModal = false;
+            	});
+          }
+					
 						
 				}
 				 else {
@@ -204,6 +219,8 @@
 					}
 					
 				}
+        
+        
 			},
 			/* 查询余额 */
 			queryBalanceByPhone() {
