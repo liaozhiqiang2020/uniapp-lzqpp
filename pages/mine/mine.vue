@@ -182,11 +182,12 @@
           	})
           }else{
             this.$http
-            	.testPost('/weixin/findStudentByPhone/17611400761')
+            	.testPost('/weixin/findStudentByPhone/'+phone)
             	.then(res => {
             		uni.stopPullDownRefresh();
             		this.loadModal = false
-            		if(res.data){//没有学员
+                // console.log(res.data);
+            		if(res.data.length==0){//没有学员
             			uni.showModal({
             				title: '提示',
             				content: '请先联系老师报名！',
