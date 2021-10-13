@@ -26,8 +26,13 @@
 				</picker>
 			</view>
       <view class="cu-form-group" style="border-bottom: 1rpx solid #eee;">
-      	<view class="title">招生老师手机号</view>
-      	<input placeholder="没有可不填写" v-model="formData.xstel"></input>
+      	<view class="title">招生老师</view>
+      	<!-- <input placeholder="没有可不填写" v-model="formData.xstel"></input> -->
+        <picker @change="PickerChange2" :range-key="'name'" :value="index2" :range="picker2">
+        	<view class="picker" :style="{'color': (index2>-1 ? '':'#999999')}">
+        		{{index2>-1?picker2[index2].name:'请选择招生老师'}}
+        	</view>
+        </picker>
       </view>
 			<!-- <view class="cu-form-group">
 			</view> -->
@@ -46,7 +51,9 @@
 		data() {
 			return {
 				index: -1,
+        index2:-1,
 				picker: ['男', '女'],
+        picker2: [],
 				formData: {
 					name: "",
 					age: "",
@@ -54,6 +61,7 @@
 					school: "",
 					name: "",
 					sex: "",
+          xstel:""
 				},
 				loading: false, //加载状态
 				themeList: this.$mConstDataConfig.themeList,
@@ -74,6 +82,7 @@
 			    }
 			})
 			
+      this.queryXiaoShou();
 			this.loadShareImg();
 		},
 		methods: {
@@ -82,6 +91,11 @@
 				this.formData.sex = this.picker[this.index]
 				// console.log(e.detail.value)
 			},
+      PickerChange2(e) {
+      	this.index2 = e.detail.value
+      	this.formData.xstel = this.picker2[this.index2].tel;
+      	// console.log(e.detail.value)
+      },
 			calling() {
 			    uni.makePhoneCall({
 			    	phoneNumber: '17805421508' //仅为示例
@@ -132,6 +146,24 @@
 						});
 				}
 			},
+      /* 查询销售 */
+      queryXiaoShou() {
+        // console.log(this.chargeType);
+        var phone = wx.getStorageSync("phoneNumber")
+        this.$http
+          .testPost('/weixin/findAllZSteacher', {
+            // type: this.chargeType
+          })
+          .then(res => {
+            this.loadModal = false
+            console.log("销售");
+            console.log(res.data);
+            this.picker2 = res.data;
+          })
+          .catch(err => {
+            this.loadModal = false;
+          });
+      },
 			loadShareImg(){
 			   this.$http
 			   	.testPost('/weixin/findGongGaoNotice/3')

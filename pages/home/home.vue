@@ -12,7 +12,8 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<sh-menu :detail="menuList" :imgW="110" :menu="menu"></sh-menu>
+		
+    <sh-menu :detail="menuList" :imgW="110" :menu="menu"></sh-menu>
 		<view class="index solids-top">
 			<view class="box">
 				<view class="cu-bar bg-white">
