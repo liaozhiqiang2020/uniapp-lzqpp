@@ -25,6 +25,9 @@
 							<view class="shop-price">						
 								<text :class="'text-' + themeColor.name">{{item.startTime}}-{{item.endTime}}</text>
 							</view>
+              <view class="shop-title">
+              	<text>{{item.coachName}}</text>
+              </view>
 						</view>
 					</view>
 				</uni-list-item>
