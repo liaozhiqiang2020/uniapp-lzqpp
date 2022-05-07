@@ -29,6 +29,7 @@
 						<text class="text-color">{{item.title}}</text>
 					</view>
 					<view class="action" v-if="item.num == ''"><text class="text-black text-bold">{{item.num}}</text></view>
+					<view class="action" v-else-if="item.num == '1'"><text class="text-black text-bold">{{jifen}}分</text></view>
 					<view class="action" v-else><text class="text-black text-bold">{{item.num}}元</text></view>
 				</view>
 			</view>
@@ -71,6 +72,7 @@
 		data() {
 			return {
 				themeList: this.$mConstDataConfig.themeList,
+				jifen:"0",
 				menuBorder: true,
 				menuArrow: true,
 				menuCard: true,
@@ -96,6 +98,22 @@
 						isRight: false
 					},
 					{
+							num: "1",
+							color: "orange",
+							title: "当前积分",
+							path: "",
+							icon: "cuIcon-vip",
+							isRight: false
+						},
+						{
+							num: "",
+							color: "#2db93f",
+							title: "个人成就",
+							path: "/pages/mine/chengjiudatil",
+							icon: "cuIcon-lightauto",
+							isRight: true
+						},
+					{
 						num: "",
 						color: "#b2bb2c",
 						title: "上课记录",
@@ -119,14 +137,14 @@
 						icon: "cuIcon-noticefill",
 						isRight: true
 					},
-					{
-						num: "",
-						color: "#2db93f",
-						title: "推广返课",
-						path: "",
-						icon: "cuIcon-forwardfill",
-						isRight: true
-					}
+					// {
+					// 	num: "",
+					// 	color: "#2db93f",
+					// 	title: "推广返课",
+					// 	path: "",
+					// 	icon: "cuIcon-forwardfill",
+					// 	isRight: true
+					// }
 				]
 			};
 		},
@@ -137,11 +155,13 @@
 
 		},
 		onPullDownRefresh() {
-			this.queryBalanceByPhone()
+			this.queryBalanceByPhone();
+			this.queryJifenByPhone();
 		},
 		onShow() {
 			this.swiperBj = require('../../static/swiper-'+this.themeColor.name+'.png')
-			this.queryBalanceByPhone()
+			this.queryBalanceByPhone();
+			this.queryJifenByPhone();
 			uni.setTabBarStyle({
 				selectedColor: this.themeColor.color,
 				borderStyle: 'white'
@@ -232,6 +252,22 @@
 						uni.stopPullDownRefresh();
 						this.loadModal = false
 						this.list[0].num = res.data
+						// console.log(res.data)
+					})
+					.catch(err => {
+						uni.stopPullDownRefresh();
+						this.loadModal = false;
+					});
+			},
+			/* 查询积分 */
+			queryJifenByPhone() {
+				var phone = wx.getStorageSync("phoneNumber")
+				this.$http
+					.testPost('/weixin/queryJifenByPhone/' + phone)
+					.then(res => {
+						uni.stopPullDownRefresh();
+						this.loadModal = false
+						this.jifen = res.data
 						// console.log(res.data)
 					})
 					.catch(err => {

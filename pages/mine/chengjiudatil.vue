@@ -3,12 +3,12 @@
 		<view class="cu-list menu border" :class="[menuBorder ? 'sm-border' : '']">
 			<view class="cu-item" :class="menuArrow ? '' : ''">
 				<view class="content">
-					<text class="text-color">切换课程</text>
+					<text class="text-color">切换学员</text>
 				</view>
 				<view class="action">
 					<picker @change="PickerChange" :range-key="'name'" :value="index" :range="picker">
 						<view class="picker" :style="{'color': (index>-1 ? '':'#999999')}">
-							{{index>-1?picker[index].name:'请选择课程'}}
+							{{index>-1?picker[index].name:'请选择学员'}}
 						</view>
 					</picker>
 				</view>
@@ -17,24 +17,12 @@
 				</view>
 			</view>
 		</view>
-		<view class="cu-form-group">
-			<view class="title">评分</view>
-			<input placeholder="请输入评分" v-model="score" @onkeyup = "value=value.replace(/[^\d]/g,'')"></input>
-		</view>
-		<view class="cu-form-group">
-			<view class="title">评语</view>
-			<textarea placeholder="请输入评语"  v-model="comment"></textarea>
-		</view>
-		<view class="cu-form-group">
-
-		</view>
-		<view class="test" v-if="JSON.stringify(formData) != '{}'" @click="sign">
+		<!-- <view class="test" v-if="JSON.stringify(formData) != '{}'" @click="sign">
 			<view class="dot">
 				<text>{{stuName}}</text>
 				<text class="text-white" style="font-size: 30upx;">签到打卡</text>
 			</view>
-
-		</view>
+		</view> -->
 		<noData v-if="list.length == 0"></noData>
 		<ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color"
 			v-if="loadModal" />
@@ -63,15 +51,10 @@
 				formData: {},
 				id: "",
 				chargeType:"",
-				stuName:"",
-				score:"",
-				comment:""
+				stuName:""
 			}
 		},
 		onLoad(val) {
-			this.id = val.id;
-			this.chargeType = val.chargeType;
-			this.stuName = val.stuName;
 			this.addr();
 			uni.setNavigationBarColor({
 				frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
@@ -84,18 +67,19 @@
 		},
 		methods: {
 			PickerChange(e) {
-				this.index = e.detail.value
-				this.formData = this.picker[this.index]
+				this.index = e.detail.value;
+				this.formData = this.picker[this.index];
+        console.log(this.formData);
+        uni.navigateTo({
+        	url: "/pages/mine/chengjiu?name="+this.formData.name+"&studentId="+this.formData.id
+        });
 				// this.loadModal = true
 			},
-			/* 查询课程 */
+			/* 查询学员 */
 			addr() {
-				console.log(this.chargeType);
 				var phone = wx.getStorageSync("phoneNumber")
 				this.$http
-					.testPost('/weixin/queryCouresByStuId',{
-						type:this.chargeType
-					})
+					.testPost('/weixin/findStudentByPhone/'+phone)
 					.then(res => {
 						this.loadModal = false
 						this.picker = res.data
@@ -103,44 +87,6 @@
 					.catch(err => {
 						this.loadModal = false;
 					});
-			},
-			/* 签到 */
-			sign() {
-				this.loadModal = true
-				var phone = wx.getStorageSync("phoneNumber");
-				this.$http
-					.testPost('/weixin/studentSignByCoach', {
-						courseId: this.formData.id,
-						placeId: this.formData.placeId,
-						remarks: phone,
-						studentId: this.id,
-						score:this.score,
-						comment:this.comment
-					})
-					.then(res => {
-						this.loadModal = false
-						
-						if (res.data.code == 200) {
-							wx.showModal({
-								title: '提示',
-								content: '签到成功',
-								showCancel: false,
-								success: (res)=> {
-									if (res.cancel) {
-										//点击取消,默认隐藏弹框
-									} else {
-										//点击确定
-										// this.addr();
-										wx.navigateBack();
-									}
-								}
-							})
-						}
-					})
-					.catch(err => {
-						this.loadModal = false;
-					});
-
 			},
 		}
 	}

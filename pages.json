@@ -123,6 +123,20 @@
     		"navigationBarTextStyle": "white"
     	}
     },
+	{
+		"path": "pages/mine/chengjiu",
+		"style": {
+			"navigationBarTitleText": "个人成就",
+			"navigationBarTextStyle": "white"
+		}
+	},
+	{
+		"path": "pages/mine/chengjiudatil",
+		"style": {
+			"navigationBarTitleText": "学员选择",
+			"navigationBarTextStyle": "white"
+		}
+	},
     {
     	"path": "pages/paike/datil",
     	"style": {
@@ -166,7 +180,10 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"usingComponents": {
+			"ly-tree-node": "/components/ly-tree/ly-tree-node"
+		}
 	},
 	"permission": {
 		"scope.userLocation": {
