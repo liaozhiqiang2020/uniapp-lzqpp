@@ -76,11 +76,10 @@
         </view>
         <view v-show="nowIndex==0" class="ruleinof">
           <view class="ruleconten">1、每上三节课积攒一次抽奖次数。</view>
-          <view class="ruleconten">2、抽中奖品者，可随时进店兑换奖品。</view>
-          <view class="ruleconten">3、进店兑奖时需要告知工作人员抽奖时微信所绑定的手机号。</view>
-          <view class="ruleconten">4、奖品不定时更新。</view>
-          <view class="ruleconten">5、抽奖时出现问题请联系工作人员。</view>
-          <view class="ruleconten">6、本活动最终解释权归零之启乒乓所有。</view>
+          <view class="ruleconten">2、奖品均为积分，抽中后自动兑换到当前账户中。</view>
+		  <view class="ruleconten">3、积分达到一定数额可换取相对应的奖品。</view>
+          <view class="ruleconten">4、抽奖时出现问题请联系工作人员。</view>
+          <view class="ruleconten">5、本活动最终解释权归零之启乒乓所有。</view>
         </view>
         <view class="ruleinof" v-show="nowIndex==1">
           <view style="width: 100%;height: 496rpx;  margin-top: 40rpx;overflow-y:auto;">
