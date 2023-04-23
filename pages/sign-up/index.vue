@@ -7,11 +7,11 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">姓名</view>
-				<input  placeholder="请输入姓名" v-model="formData.name"></input>
+				<input placeholder="请输入姓名" v-model="formData.name"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">年龄</view>
-				<input placeholder="请输入年龄" v-model="formData.age" @onkeyup = "value=value.replace(/[^\d]/g,'')"></input>
+				<input placeholder="请输入年龄" v-model="formData.age" @onkeyup="value=value.replace(/[^\d]/g,'')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">学校</view>
@@ -25,35 +25,48 @@
 					</view>
 				</picker>
 			</view>
-      <view class="cu-form-group" style="border-bottom: 1rpx solid #eee;">
-      	<view class="title">招生老师</view>
-      	<!-- <input placeholder="没有可不填写" v-model="formData.xstel"></input> -->
-        <picker @change="PickerChange2" :range-key="'name'" :value="index2" :range="picker2">
-        	<view class="picker" :style="{'color': (index2>-1 ? '':'#999999')}">
-        		{{index2>-1?picker2[index2].name:'请选择招生老师'}}
-        	</view>
-        </picker>
-      </view>
-			<!-- <view class="cu-form-group">
-			</view> -->
-			<view class="padding-xl">
-				<button class="cu-btn block margin-tb-sm lg" :class="'bg-' + themeColor.name" :loading="loading" @click="submit">提交</button>
+			<view class="cu-form-group" style="border-bottom: 1rpx solid #eee;">
+				<view class="title">报名俱乐部</view>
+				<picker @change="PickerChange3" :range-key="'name'" :value="index3" :range="picker3">
+					<view class="picker" :style="{'color': (index3>-1 ? '':'#999999')}">
+						{{index3>-1?picker3[index3].name:'请选择所要报名的俱乐部'}}
+					</view>
+				</picker>
 			</view>
-			
-			<view class="telicon" @click="calling"><image src="/static/tel.png"></image></view>
+			<view class="cu-form-group" style="border-bottom: 1rpx solid #eee;" v-if="showTeacher">
+				<view class="title">招生老师</view>
+				<picker @change="PickerChange2" :range-key="'name'" :value="index2" :range="picker2">
+					<view class="picker" :style="{'color': (index2>-1 ? '':'#999999')}">
+						{{index2>-1?picker2[index2].name:'请选择招生老师'}}
+					</view>
+				</picker>
+			</view>
+			<view class="padding-xl">
+				<button class="cu-btn block margin-tb-sm lg" :class="'bg-' + themeColor.name" :loading="loading"
+					@click="submit">提交</button>
+			</view>
+
+			<view class="telicon" @click="calling">
+				<image src="/static/tel.png"></image>
+			</view>
 		</form>
 	</view>
 </template>
 
 <script>
-	import { mapState ,mapMutations} from 'vuex';
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
 	export default {
 		data() {
 			return {
 				index: -1,
-        index2:-1,
+				index2: -1,
+				index3: -1,
 				picker: ['男', '女'],
-        picker2: [],
+				picker2: [],
+				picker3: [],
 				formData: {
 					name: "",
 					age: "",
@@ -61,46 +74,53 @@
 					school: "",
 					name: "",
 					sex: "",
-          xstel:""
+					xstel: "",
+					placeId: ""
 				},
 				loading: false, //加载状态
 				themeList: this.$mConstDataConfig.themeList,
-				share:{
+				share: {
 					title: '',
-					imageUrl:'',
-				}
-				
+					imageUrl: '',
+				},
+				showTeacher:false
+
 			}
 		},
-		onLoad(){
+		onLoad() {
 			uni.setNavigationBarColor({
-			    frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
-			    backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色
-			    animation: {  //动画效果
-			        duration: 100,
-			        timingFunc: 'easeIn'
-			    }
+				frontColor: '#ffffff', //前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000
+				backgroundColor: this.themeColor.color, //背景颜色值，有效值为十六进制颜色
+				animation: { //动画效果
+					duration: 100,
+					timingFunc: 'easeIn'
+				}
 			})
-			
-      this.queryXiaoShou();
+
+			// this.queryXiaoShou();
+			this.queryPlaceName();
 			this.loadShareImg();
 		},
 		methods: {
 			PickerChange(e) {
 				this.index = e.detail.value
 				this.formData.sex = this.picker[this.index]
-				// console.log(e.detail.value)
 			},
-      PickerChange2(e) {
-      	this.index2 = e.detail.value
-      	this.formData.xstel = this.picker2[this.index2].tel;
-      	// console.log(e.detail.value)
-      },
+			PickerChange2(e) {
+				this.index2 = e.detail.value
+				this.formData.xstel = this.picker2[this.index2].tel;
+			},
+			PickerChange3(e) {
+				this.index3 = e.detail.value
+				this.formData.placeId = this.picker3[this.index3].id;
+				this.queryXiaoShou();
+				this.showTeacher = true;
+			},
 			calling() {
-			    uni.makePhoneCall({
-			    	phoneNumber: '17805421508' //仅为示例
-			    });
-			  },
+				uni.makePhoneCall({
+					phoneNumber: '17805421508' //仅为示例
+				});
+			},
 			/* 提交表单 */
 			submit() {
 				let phoneReg = /^[1][3,6,4,5,7,8][0-9]{9}$/;
@@ -109,23 +129,20 @@
 					this.$api.msg('手机号不合法')
 				} else if (this.formData.name == '') {
 					this.$api.msg('请输入姓名')
-				} 
-        else if (!numReg.test(this.formData.age)) {
+				} else if (!numReg.test(this.formData.age)) {
 					this.$api.msg('年龄只能输入数字')
-				} 
-    //     else if (this.formData.school == '') {
-				// 	this.$api.msg('请输入学校')
-				// } 
-        else if (this.formData.sex == '') {
+				} else if (this.formData.sex == '') {
 					this.$api.msg('请选择性别')
-				} 
-        else {
+				} else if (this.formData.xstel == '') {
+					this.$api.msg('请选择招生老师')
+				}
+				else {
 					this.loading = true
 					this.$http
 						.testPost('/weixin/addSignUp', this.formData)
 						.then(res => {
 							this.loading = false
-							if (res.data==1) {
+							if (res.data == 1) {
 								uni.showToast({
 									title: '报名成功',
 									icon: 'success',
@@ -146,49 +163,61 @@
 						});
 				}
 			},
-      /* 查询销售 */
-      queryXiaoShou() {
-        // console.log(this.chargeType);
-        var phone = wx.getStorageSync("phoneNumber")
-        this.$http
-          .testPost('/weixin/findAllZSteacher', {
-            // type: this.chargeType
-          })
-          .then(res => {
-            this.loadModal = false
-            console.log("销售");
-            console.log(res.data);
-            this.picker2 = res.data;
-          })
-          .catch(err => {
-            this.loadModal = false;
-          });
-      },
-			loadShareImg(){
-			   this.$http
-			   	.testPost('/weixin/findGongGaoNotice/3')
-			   	.then(res => {
-			   			this.loadModal = false
-			   			this.share.imageUrl = 'https://lzqpp.natapp4.cc'+res.data[0].imgUrl
-						this.share.title = '零之启乒乓在线报名'
-			   		})
-			   		.catch(err => {
-			   			this.loadModal = false;
-			   		});
+			/* 查询销售 */
+			queryXiaoShou() {
+				var placeId = this.formData.placeId;
+				
+				this.$http
+					.testPost('/weixin/findAllZSteacher', {
+						placeId: this.formData.placeId
+					})
+					.then(res => {
+						this.loadModal = false
+						this.picker2 = res.data;
+					})
+					.catch(err => {
+						this.loadModal = false;
+					});
+				
+			},
+			/* 查询场地 */
+			queryPlaceName() {
+				this.$http
+					.testPost('/weixin/queryPlaces', {
+					})
+					.then(res => {
+						this.loadModal = false
+						this.picker3 = res.data;
+					})
+					.catch(err => {
+						this.loadModal = false;
+					});
+			},
+			loadShareImg() {
+				this.$http
+					.testPost('/weixin/findGongGaoNotice/3')
+					.then(res => {
+						this.loadModal = false
+						this.share.imageUrl = 'https://lzqpp.natapp4.cc' + res.data[0].imgUrl
+						this.share.title = uni.getStorageSync("placeName")+'乒乓在线报名'
+					})
+					.catch(err => {
+						this.loadModal = false;
+					});
 			}
 		},
-		onShareAppMessage(res) {  
-		 return {
-		 			title: this.share.title,
-		 			imageUrl:this.share.imageUrl
-		 }
-		  
+		onShareAppMessage(res) {
+			return {
+				title: this.share.title,
+				imageUrl: this.share.imageUrl
+			}
+
 		},
 		onShareTimeline(res) {
-			 return {
-			 			title: this.share.title,
-			 			imageUrl:this.share.imageUrl
-			 }
+			return {
+				title: this.share.title,
+				imageUrl: this.share.imageUrl
+			}
 		}
 	}
 </script>
@@ -202,7 +231,17 @@
 		// background: #642B8D !important;
 		color: #ffffff;
 	}
-	
-	.telicon{width:120rpx;height:120rpx;position:fixed;bottom:80rpx;right:20rpx;}
-	.telicon image{width:120rpx;height:120rpx;}
+
+	.telicon {
+		width: 120rpx;
+		height: 120rpx;
+		position: fixed;
+		bottom: 80rpx;
+		right: 20rpx;
+	}
+
+	.telicon image {
+		width: 120rpx;
+		height: 120rpx;
+	}
 </style>

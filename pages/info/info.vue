@@ -14,7 +14,7 @@
 				<uni-list-item :border="!options.waterfall" class="uni-list-item--waterfall" title="自定义商品列表"
 					v-for="(item,index) in goods" :key="index">
 					<!-- 通过body插槽定义商品布局 -->
-					<view slot="body" class="shop">
+					<view slot="body" class="shop" @click="chooseRealClass(item)">
 						<view style="display: flex;flex-direction:row;margin: 0 auto;">
 							<view class="shop-title">
 								<text>{{item.studentName}}</text>
@@ -150,6 +150,43 @@
 					
 				
 			},
+			chooseRealClass(item){
+				var that = this;
+				var phone = wx.getStorageSync("phoneNumber")
+				
+				uni.showModal({
+				  title:'提示',
+				  content:'是否确定学员【'+item.studentName+'】自动签到？确定后不可修改',
+				  success:function(res){
+				    if(res.confirm){
+						that.$http
+						  .testPost('/weixin/findRoleNameByPhone/'+phone)
+						  .then(res2 => {
+						    that.loadModal = false
+						    if(res2.data==3){
+								console.log(item);
+								that.$http
+								  .testPost('/weixin/addRealClassByEntity', 
+										item
+									)
+								  .then(res3 => {
+								    that.loadModal = false
+								    that.getList();
+								  })
+								  .catch(err => {
+								    that.loadModal = false;
+								  });
+							}
+						  })
+						  .catch(err => {
+						    that.loadModal = false;
+						  });
+				    }else{
+				      console.log('点击取消');
+				    }
+				  }
+				})
+			}
 		}
 	}
 </script>

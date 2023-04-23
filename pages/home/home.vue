@@ -12,8 +12,8 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		
-    <sh-menu :detail="menuList" :imgW="110" :menu="menu"></sh-menu>
+
+		<sh-menu :detail="menuList" :imgW="110" :menu="menu"></sh-menu>
 		<view class="index solids-top">
 			<view class="box">
 				<view class="cu-bar bg-white">
@@ -23,7 +23,8 @@
 				</view>
 			</view>
 			<view class="Layout LayoutLjflzn LayoutJrrd bg-white padding-lr">
-				<view class="solids-bottom flex align-center contentBox" v-for="(item, index) in newslist" :key="index" @click="datil(item)">
+				<view class="solids-bottom flex align-center contentBox" v-for="(item, index) in newslist" :key="index"
+					@click="datil(item)">
 					<image :src="baseUrl+item.imgUrl" mode="aspectFill"></image>
 					<view class="content">
 						<view class="title text-bold text-black">{{ item.nickName }}</view>
@@ -36,7 +37,8 @@
 				</view>
 			</view>
 		</view>
-		<ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color" v-if="loadModal" />
+		<ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color"
+			v-if="loadModal" />
 	</view>
 </template>
 
@@ -58,10 +60,10 @@
 				themeList: this.$mConstDataConfig.themeList,
 				config: {
 					//顶部导航栏参数
-					title: '零之启',
+					title: "零之启",
 					color: '#ffffff',
 					fontSize: '14px',
-					isShow:true,
+					isShow: true,
 					back: false,
 					//背景颜色;参数一：透明度（0-1）;参数二：背景颜色（array则为线性渐变，string为单色背景）
 					backgroundColor: [1, ['#642B8D', '#642B8D', '#642B8D', '#642B8D']]
@@ -69,16 +71,15 @@
 				swiperList: [],
 				dotStyle: true,
 				swiperBj: require('../../static/swiper-rf.png'),
-				// swiperBj: require('../../static/swiper-'+this.themeColor.name+'.png'),
 				queryReportProvinceList: [],
 				newslist: [], // 新闻列表
 				baseUrl: baseUrl.baseUrl,
 				loadModal: false, //加载
 				menuList: [], //菜单列表
-				menu:3,
-				share:{
+				menu: 3,
+				share: {
 					title: '',
-					imageUrl:'',
+					imageUrl: '',
 				}
 			};
 		},
@@ -90,22 +91,27 @@
 			...mapState(['userInfo', 'hasLogin'])
 		},
 		onLoad() {
+
+			var phone = uni.getStorageSync("phoneNumber")
+			if (!phone) {
+				uni.navigateTo({
+					url: "/pages/phoneNumber/index"
+				})
+			} else {
+				// this.share()
+				this.loadModal = true;
+				this.loadShareImg();
+			}
 			
-      var phone = uni.getStorageSync("phoneNumber")
-      if(!phone){
-      	uni.navigateTo({
-      		url:"/pages/phoneNumber/index"
-      	})
-      }else{
-        this.share()
-        this.loadModal = true;
-        this.loadShareImg();
-      }
+			// this.config.title=uni.getStorageSync("placeName");
+			// console.log(this.config.title);
 			
 		},
 		onShow() {
+			
+			
 			var imgUrl = '../../static/swiper-rf.png'
-			this.swiperBj = require('../../static/swiper-'+this.themeColor.name+'.png')
+			this.swiperBj = require('../../static/swiper-' + this.themeColor.name + '.png')
 			this.queryCarouselImg()
 			this.getMenu()
 			this.getNews()
@@ -119,6 +125,8 @@
 					selectedIconPath
 				});
 			});
+			
+			
 		},
 		onPullDownRefresh() {
 			this.queryCarouselImg()
@@ -129,20 +137,21 @@
 
 		},
 		methods: {
-			onPress(e){
-			        console.log(e)
-			    },
+			onPress(e) {
+				console.log(e)
+			},
 			/* 轮播图 */
 			queryCarouselImg() {
+				var placeId = uni.getStorageSync("placeId");
 				this.$http
-					.testGet('/weixin/findGongGaoNotice/4')
+					.testGet('/weixin/findGongGaoNotice/4/'+placeId)
 					.then(res => {
 						this.loadModal = false
 						uni.stopPullDownRefresh();
 						if (res.data.code = 200) {
 							this.swiperList = res.data;
 						} else {
-							// this.$api.msg(res.data.msg);
+
 						}
 					})
 					.catch(err => {
@@ -153,18 +162,18 @@
 			/* 菜单 */
 			getMenu() {
 				var phone = wx.getStorageSync("phoneNumber")
-				if(phone==""){
-					phone="null";
+				if (phone == "") {
+					phone = "null";
 				}
 				this.$http
-					.testPost('/weixin/findAllBtnMenuByTel/'+phone)
+					.testPost('/weixin/findAllBtnMenuByTel/' + phone)
 					.then(res => {
 						this.loadModal = false
 						uni.stopPullDownRefresh();
 						if (res.data.code = 200) {
 							this.menuList = res.data
 						} else {
-							// this.$api.msg(res.data.msg);
+
 						}
 					})
 					.catch(err => {
@@ -174,24 +183,24 @@
 			},
 			/* 新闻资讯 */
 			getNews() {
-        console.log(222);
+				var placeId = uni.getStorageSync("placeId");
 				this.$http
-					.testPost('/weixin/findGongGaoNotice/1')
+					.testPost('/weixin/findGongGaoNotice/1/'+placeId)
 					.then(res => {
 						this.loadModal = false
 						uni.stopPullDownRefresh();
-            var news = [];
+						var news = [];
 						if (res.data.code = 200) {
-              console.log(res.data);
-              
-              // for(var i = 0;i<res.data.length;i++){
-              //   //替换所有的换行符
-              //   res.data[i].reward = res.data[i].reward.replace(/[\n\r]/g,"\n")
-              // }
-              
-              console.log(res.data);
+							
+
+							// for(var i = 0;i<res.data.length;i++){
+							//   //替换所有的换行符
+							//   res.data[i].reward = res.data[i].reward.replace(/[\n\r]/g,"\n")
+							// }
+
+							
 							this.newslist = res.data
-              
+
 						} else {
 							// this.$api.msg(res.data.msg);
 						}
@@ -202,38 +211,39 @@
 					});
 			},
 			/* 跳转详情 */
-			datil(item){
-				 var noticeInfo = JSON.stringify(item);
-				  wx.navigateTo({
-					url:"/pages/home/newDatil?noticeInfo="+noticeInfo
-				  })
+			datil(item) {
+				var noticeInfo = JSON.stringify(item);
+				wx.navigateTo({
+					url: "/pages/home/newDatil?noticeInfo=" + noticeInfo
+				})
 			},
-			loadShareImg(){
-			   this.$http
-			   	.testPost('/weixin/findGongGaoNotice/3')
-			   	.then(res => {
-			   			this.loadModal = false
-			   			this.share.imageUrl = 'https://lzqpp.natapp4.cc'+res.data[0].imgUrl
-						this.share.title = '零之启乒乓'
-			   		})
-			   		.catch(err => {
-			   			this.loadModal = false;
-			   		});
+			loadShareImg() {
+				var placeId = uni.getStorageSync("placeId");
+				this.$http
+					.testPost('/weixin/findGongGaoNotice/3/'+placeId)
+					.then(res => {
+						this.loadModal = false
+						this.share.imageUrl = 'https://lzqpp.natapp4.cc' + res.data[0].imgUrl
+						this.share.title = uni.getStorageSync("placeName")+'乒乓'
+					})
+					.catch(err => {
+						this.loadModal = false;
+					});
 			}
 
 		},
 		onShareAppMessage(res) {
-		 return {
-		 			title: this.share.title,
-		 			imageUrl:this.share.imageUrl
-		 }
-		  
+			return {
+				title: this.share.title,
+				imageUrl: this.share.imageUrl
+			}
+
 		},
 		onShareTimeline(res) {
-			 return {
-			 			title: this.share.title,
-			 			imageUrl:this.share.imageUrl
-			 }
+			return {
+				title: this.share.title,
+				imageUrl: this.share.imageUrl
+			}
 		}
 	};
 </script>
@@ -316,11 +326,12 @@
 	}
 
 	.LayoutJrrd {
-			margin-top:-15upx;
+		margin-top: -15upx;
+
 		.contentBox {
 			display: flex;
 			// height: 230upx;
-			padding:15upx 0;
+			padding: 15upx 0;
 			justify-content: space-between;
 		}
 

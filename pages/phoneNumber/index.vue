@@ -47,6 +47,8 @@
 				    var sessionKey = wx.getStorageSync("sessionKey");
 				    wx.request({
 				      url: that.baseUrl+'/weixin/getUserPhoneNumber',
+					  method:"POST",
+					  async: false,
 				      data: {
 				        encryptedData: e.detail.encryptedData,
 				        sessionkey: sessionKey,
@@ -60,11 +62,13 @@
 				            icon: 'success',
 				            duration: 2000
 				          });
-				          // that.toggleDialog();
-						  wx.switchTab({
+						  
+				          wx.setStorageSync("phoneNumber",res.data.phoneNumber);
+						
+						  
+						  wx.reLaunch({
 						    url:"/pages/home/home"
 						  })
-				          wx.setStorageSync("phoneNumber",res.data.phoneNumber);
 				        } else {
 				          wx.showModal({
 				            title: '提示',
@@ -75,24 +79,6 @@
 				      }
 				    })
 				
-				
-				
-				
-					// uni.request({
-					// 	url: baseUrl.baseUrl + '/getWxPhone', //仅为示例，并非真实接口地址。
-					// 	data: {
-					// 		iv: e.target.iv,
-					// 		encryptedData: e.target.encryptedData,
-					// 		Session_key: that.session_key
-					// 	},
-					// 	method: "POST",
-					// 	success: res => {
-					// 		// that.openid = res.data.openid
-					// 		// that.session_key = res.data.session_key
-					// 		that.phoneNumber = res.phoneNumber
-					// 		// that.queryProblemRecord();
-					// 	}
-					// });
 					this.isArrge = !this.isArrge;
 				}
 			},

@@ -151,6 +151,13 @@
     		"navigationBarTextStyle": "white"
     	}
     },
+	{
+		"path": "pages/info/info3",
+		"style": {
+			"navigationBarTitleText": "实际课程表",
+			"navigationBarTextStyle": "white"
+		}
+	},
 		{
 			"path": "pages/info/info2",
 			"style": {

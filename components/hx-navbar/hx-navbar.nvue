@@ -10,10 +10,6 @@
 		<view class="hx-navbar__content"
 		:class="{'hx-navbar__fixed': conf.fixed,'hx-navbar__shadow':conf.shadow,'hx-navbar__border':conf.border}"
 		:style="{width:screenWidth + 'px','background-color': !bgIsLine ? backgroundColorRgba : '','background':bgIsLine ? themeColor.color : '',height: navbarHeight, color: txtColor}">
-			<!-- <block v-if="backgroundImage">
-				<view class="hx-navbar__img" :style="{'background-image': backgroundImageEnd,'opacity': bgImgTransparent[1]}"></view>
-				<view class="hx-navbar__img" :style="{'background-image': backgroundImage,'opacity': bgImgTransparent[0]}"></view>
-			</block> -->
 			<view class="hx-navbar__content__imgctn" :style="{'opacity': bgImgTransparent[1]}" v-if="backgroundImage">
 				<image class="hx-navbar__imgctn__img" :style="{'height': conf.height + statusBarHeight + 'px',width:screenWidth + 'px'}" :src="backgroundImageEnd" mode="scaleToFill"></image>
 			</view>
@@ -136,13 +132,6 @@
 				<view class="hx-navbar__content__main_right" style="padding: 0;margin: 0;" v-if="conf.rightSlot">
 					<slot name="rightSwitch" v-if="conf.rightSlotSwitch && slotSwitchOpacity == 0"/>
 					<slot name="right" v-else />
-					<!-- 滑动过度 和 突变两种模式，因不实用在此先注释 -->
-					<!-- <view v-if="conf.rightSlotSwitch && (conf.slotSwitch == 1 || conf.slotSwitch == 2 && slotSwitchOpacity == 0) " :style="{'opacity': 1 - slotSwitchOpacity,top:statusBarHeight+ 1 + 'px'}">
-						<slot name="rightSwitch" />
-					</view>
-					<view v-if="conf.slotSwitch == 1 || (conf.slotSwitch == 2 && slotSwitchOpacity != 0)"   :style="{'opacity': conf.slotSwitch == 1 ? slotSwitchOpacity : 1,top:statusBarHeight + 1 + 'px'}">
-						<slot name="right" />
-					</view> -->
 				</view>
 			</view>
 			

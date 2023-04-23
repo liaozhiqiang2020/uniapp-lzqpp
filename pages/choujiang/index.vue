@@ -434,6 +434,7 @@
               //模拟网络请求时间  设为两秒
               // var stoptime = 1000;
               // setTimeout(function() {
+			var placeId = wx.getStorageSync("placeId")
 
               this.$http
                 .testPost('/weixin/saveLuckyDrawResult', {
@@ -441,7 +442,8 @@
                   drawPrize: this.prize,
                   drawAwards: this.jidengjiang,
                   isCashPrize: 0,
-                  studentId:this.studentId
+                  studentId:this.studentId,
+				  placeId:placeId
                 })
                 .then(res => {
                   if (res.data.code == 200) {
@@ -593,7 +595,7 @@
             drawPrize: prize,
             drawDate: e.getDate()
           });
-
+			var placeId = wx.getStorageSync("placeId")
           
           e.$http
             .testPost('/weixin/saveLuckyDrawResult', {
@@ -601,7 +603,8 @@
               drawPrize: prize,
               drawAwards: jidengjiang,
               isCashPrize: 0,
-              studentId:this.studentId
+              studentId:this.studentId,
+			  placeId:placeId
             })
             .then(res => {
               if (res.data.code == 200) {

@@ -17,8 +17,8 @@ const app = new Vue()
 var baseUrl = '/ksy'
 if (process.env.NODE_ENV === 'development') {
 	// #ifdef !H5
-	baseUrl = 'https://lzqpp.natapp4.cc'
-	// baseUrl = 'http://localhost:8080'
+	// baseUrl = 'https://lzqpp.natapp4.cc'
+	baseUrl = 'http://127.0.0.1:8080'
 	// #endif
 
 	// #ifdef H5
@@ -26,13 +26,13 @@ if (process.env.NODE_ENV === 'development') {
 	// #endif
 } else {
 	// #ifdef !H5
-	baseUrl = 'https://lzqpp.natapp4.cc'
-	// baseUrl = 'http://localhost:8080'
+	// baseUrl = 'https://lzqpp.natapp4.cc'
+	baseUrl = 'http://127.0.0.1:8080'
 	// #endif
 
 	// #ifdef H5
-	baseUrl = 'https://lzqpp.natapp4.cc'
-	// baseUrl = 'http://localhost:8080'
+	// baseUrl = 'https://lzqpp.natapp4.cc'
+	baseUrl = 'http://127.0.0.1:8080'
 	// #endif
 
 }

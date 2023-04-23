@@ -23,7 +23,7 @@
 				<text class="text-white" style="font-size: 30upx;">签到打卡</text>
 			</view>
 		</view> -->
-		<noData v-if="list.length == 0"></noData>
+		<!-- <noData v-if="list.length == 0"></noData> -->
 		<ourLoading isFullScreen active text="加载中" :color="themeColor.color" :textColor="themeColor.color"
 			v-if="loadModal" />
 	</view>
@@ -50,8 +50,8 @@
 				loadModal: false,
 				formData: {},
 				id: "",
-				chargeType:"",
-				stuName:""
+				chargeType: "",
+				stuName: ""
 			}
 		},
 		onLoad(val) {
@@ -69,19 +69,19 @@
 			PickerChange(e) {
 				this.index = e.detail.value;
 				this.formData = this.picker[this.index];
-        console.log(this.formData);
-        uni.navigateTo({
-        	url: "/pages/paike/index?studentId="+this.formData.id+"&chargeType="
-          +this.formData.chargeType+"&placeId="
-          +this.formData.placeId
-        });
-				// this.loadModal = true
+
+				uni.navigateTo({
+					url: "/pages/paike/index?studentId=" + this.formData.id + "&chargeType=" +
+						this.formData.chargeType + "&placeId=" +
+						this.formData.placeId
+				});
 			},
 			/* 查询学员 */
 			addr() {
-				var phone = wx.getStorageSync("phoneNumber")
+				// var placeId = wx.getStorageSync("placeId")
+				
 				this.$http
-					.testPost('/weixin/queryStudentByPlace/'+1)
+					.testPost('/weixin/queryStudentByPlace/' + 1)
 					.then(res => {
 						this.loadModal = false
 						this.picker = res.data
